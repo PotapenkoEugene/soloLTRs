@@ -1,5 +1,8 @@
 references/
 
+# Pipeline generated output (collapsed consensus, bwa-mem2 index, result TSVs)
+data/pipeline/
+
 # Simulated genomes and reads (large files — do not commit)
 data/sim/*/genome/*.fa
 data/sim/*/genome/*.fasta
