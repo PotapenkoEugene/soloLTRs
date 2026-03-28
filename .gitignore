@@ -1,1 +1,22 @@
 references/
+
+# Simulated genomes and reads (large files — do not commit)
+data/sim/*/genome/*.fa
+data/sim/*/genome/*.fasta
+data/sim/*/reads*/
+data/sim/t4/samples/
+*.fq
+*.fq.gz
+*.fastq
+*.fastq.gz
+*.bam
+*.sam
+*.bai
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.venv/

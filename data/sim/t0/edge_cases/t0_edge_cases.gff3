@@ -1,0 +1,5 @@
+##gff-version 3
+chr1	sim	solo_LTR	806	1155	.	+	.	ID=soloLTR_0001;family=CRM1;superfamily=Ty3_Gypsy;divergence=0.0500;divergence_bin=5-10;tsd_5=TAGCC;tsd_3=TAGCC;tsd_status=perfect;tier=0
+chr1	sim	solo_LTR	2866	3415	.	-	.	ID=soloLTR_0002;family=RIRE2;superfamily=Ty3_Gypsy;divergence=0.0800;divergence_bin=5-10;tsd_5=CACTG;tsd_3=CAGTG;tsd_status=mismatch_1;tier=0
+chr1	sim	solo_LTR	5926	6475	.	+	.	ID=soloLTR_0003;family=RIRE2;superfamily=Ty3_Gypsy;divergence=0.1500;divergence_bin=10-20;tsd_5=GACTT;tsd_3=GTT;tsd_status=degraded;tier=0
+chr1	sim	solo_LTR	8986	9585	.	+	.	ID=soloLTR_0004;family=RIRE2;superfamily=Ty3_Gypsy;divergence=0.1200;divergence_bin=10-20;tsd_5=TTGGA;tsd_3=TTGGA;tsd_status=perfect;tier=0

@@ -1,0 +1,6 @@
+##gff-version 3
+chr1	sim	LTR_retrotransposon	506	7438	.	-	.	ID=intact_0001;family=RIRE2;superfamily=Ty3_Gypsy;divergence=0.0200;divergence_bin=0-5;tsd_5=AGACT;tsd_3=AGACT;tsd_status=perfect;tier=0
+chr1	sim	LTR_retrotransposon	21949	28881	.	-	.	ID=intact_0002;family=RIRE2;superfamily=Ty3_Gypsy;divergence=0.0200;divergence_bin=0-5;tsd_5=ATTCA;tsd_3=ATTCA;tsd_status=perfect;tier=0
+chr1	sim	solo_LTR	21892	22441	.	-	.	ID=soloLTR_0003;family=RIRE2;superfamily=Ty3_Gypsy;divergence=0.0300;divergence_bin=0-5;tsd_5=TAATA;tsd_3=TAATA;tsd_status=perfect;tier=0
+chr1	sim	solo_LTR	26452	27001	.	-	.	ID=soloLTR_0004;family=RIRE2;superfamily=Ty3_Gypsy;divergence=0.0300;divergence_bin=0-5;tsd_5=ACGGC;tsd_3=ACGGC;tsd_status=perfect;tier=0
+chr1	sim	solo_LTR	37012	37561	.	+	.	ID=soloLTR_0005;family=RIRE2;superfamily=Ty3_Gypsy;divergence=0.0300;divergence_bin=0-5;tsd_5=AAATG;tsd_3=AAATG;tsd_status=perfect;tier=0
