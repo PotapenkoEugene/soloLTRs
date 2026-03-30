@@ -204,10 +204,19 @@ def main():
               "will be excluded from pipeline library unless --no-filter is used with "
               "a library that contains internal sequences separately.", file=sys.stderr)
 
-    # Write output files
-    ltr_out_records = [(h, s) for fam, (h, s) in sorted(ltr_records.items())
+    # Write output files.
+    # Use the remapped family name (superfamily for EDTA internal IDs) as the FASTA
+    # header so that annotate._parse_fasta() produces matching keys for LTR and INT.
+    # Header format: {family}_LTR#LTR/{classification}  /  {family}_INT#LTR/{classification}
+    def _cls(header: str) -> str:
+        """Extract the #... classification suffix from an EDTA header, e.g. 'LTR/Copia'."""
+        return header.split("#", 1)[1].split()[0] if "#" in header else "LTR"
+
+    ltr_out_records = [(f"{fam}_LTR#{_cls(ltr_records[fam][0])}", s)
+                       for fam, (h, s) in sorted(ltr_records.items())
                        if fam in complete_families]
-    int_out_records = [(h, s) for fam, (h, s) in sorted(internal_records.items())
+    int_out_records = [(f"{fam}_INT#{_cls(internal_records[fam][0])}", s)
+                       for fam, (h, s) in sorted(internal_records.items())
                        if fam in complete_families]
 
     ltr_path = args.out_dir / "ltr_only.fa"

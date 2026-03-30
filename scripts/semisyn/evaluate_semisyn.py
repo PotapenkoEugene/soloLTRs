@@ -126,15 +126,17 @@ def main():
                     })
                     continue
 
-                try:
-                    sc_est = float(row["SC_ratio"])
-                    ci_lo = float(row["SC_ci_lo"])
-                    ci_hi = float(row["SC_ci_hi"])
-                    d_ltr = float(row["D_LTR"])
-                    d_int = float(row["D_INT"])
-                except (ValueError, KeyError):
-                    sc_est = float("nan")
-                    ci_lo = ci_hi = d_ltr = d_int = float("nan")
+                def _float(v: str) -> float:
+                    try:
+                        return float(v)
+                    except (ValueError, TypeError):
+                        return float("nan")
+
+                sc_est = _float(row.get("SC_ratio", "NA"))
+                ci_lo  = _float(row.get("SC_ci_lo", "NA"))
+                ci_hi  = _float(row.get("SC_ci_hi", "NA"))
+                d_ltr  = _float(row.get("D_LTR", "NA"))
+                d_int  = _float(row.get("D_INT", "NA"))
 
                 error = sc_est - sc_true
                 abs_error = abs(error)
