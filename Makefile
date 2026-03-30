@@ -360,7 +360,9 @@ semisyn-prepare: prepare
 	  --out $(SS_CATALOG) 2>/dev/null || true
 
 # Run pipeline on all samples x coverages
-semisyn-run: semisyn-prepare semisyn-reads
+# NOTE: depends only on reads; caller must ensure library is prepared first
+# (semisyn-all calls semisyn-prepare first; semisyn-all-real calls semisyn-prepare-real)
+semisyn-run: semisyn-reads
 	@for sample_dir in $(SS_SAMPLES)/sample_*/; do \
 	  sid=$$(basename $$sample_dir); \
 	  for cov in $(SS_COVERAGES); do \
@@ -369,7 +371,7 @@ semisyn-run: semisyn-prepare semisyn-reads
 	    outdir=$(SS_RESULTS)/$${sid}_$${cov}x; \
 	    mkdir -p $$outdir; \
 	    python3 -m scripts.pipeline.cli run \
-	      --lib-dir $(PIPLIB) \
+	      --lib-dir $(SS_LIB) \
 	      --r1 $$reads_dir/r1.fq \
 	      --r2 $$reads_dir/r2.fq \
 	      --out $$outdir \
@@ -387,9 +389,13 @@ semisyn-eval:
 	  --coverages $(shell echo $(SS_COVERAGES) | tr ' ' ',') \
 	  --out-dir $(SS_EVAL)
 
-# Full Phase B pipeline (catalog -> eval)
+# Full Phase B pipeline (catalog -> eval) — mock/t2_mock only
 semisyn-all: semisyn-mock-catalog semisyn-extract semisyn-partition \
-             semisyn-genomes semisyn-reads semisyn-run semisyn-eval
+             semisyn-genomes semisyn-reads semisyn-prepare semisyn-run semisyn-eval
+
+# Full Phase B pipeline for real species (catalog already built by Phase A)
+semisyn-all-real: semisyn-extract semisyn-partition semisyn-genomes \
+                  semisyn-reads semisyn-prepare-real semisyn-run semisyn-eval
 
 # ── Tool installation (one-time setup) ───────────────────────────────────
 
@@ -533,7 +539,7 @@ semisyn-validate-catalog:
         semisyn-parse-edta semisyn-parse-look4ltrs semisyn-parse-soloLTRseeker \
         semisyn-merge semisyn-lib \
         semisyn-mock-catalog semisyn-extract semisyn-partition semisyn-genomes \
-        semisyn-reads semisyn-prepare semisyn-run semisyn-eval semisyn-all \
+        semisyn-reads semisyn-prepare semisyn-run semisyn-eval semisyn-all semisyn-all-real \
         semisyn-install-edta semisyn-install-look4ltrs semisyn-install-soloLTRseeker \
         semisyn-install-tools \
         semisyn-genome-arabidopsis \
