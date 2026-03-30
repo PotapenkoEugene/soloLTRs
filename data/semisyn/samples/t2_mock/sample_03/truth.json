@@ -1,0 +1,34 @@
+{
+  "sample_id": "sample_03",
+  "species": "t2_mock",
+  "truth_SC": {
+    "ANGELA": 1.0,
+    "Athila6": 1.0,
+    "BARE-1": 1.0,
+    "CRM1": 1.0,
+    "RIRE2": 1.0
+  },
+  "n_solo": {
+    "ANGELA": 2,
+    "Athila6": 2,
+    "BARE-1": 2,
+    "CRM1": 2,
+    "RIRE2": 2
+  },
+  "n_intact": {
+    "ANGELA": 2,
+    "Athila6": 2,
+    "BARE-1": 2,
+    "CRM1": 2,
+    "RIRE2": 2
+  },
+  "target_SC": {
+    "ANGELA": 1.0,
+    "Athila6": 1.0,
+    "BARE-1": 1.0,
+    "CRM1": 1.0,
+    "RIRE2": 1.0
+  },
+  "n_loci": 20,
+  "genome_len": 243350
+}

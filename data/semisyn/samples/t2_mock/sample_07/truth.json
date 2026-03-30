@@ -1,0 +1,10 @@
+{
+  "sample_id": "sample_07",
+  "species": "t2_mock",
+  "truth_SC": {},
+  "n_solo": {},
+  "n_intact": {},
+  "target_SC": {},
+  "n_loci": 0,
+  "genome_len": 100000
+}

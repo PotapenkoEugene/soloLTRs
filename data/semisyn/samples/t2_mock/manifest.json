@@ -1,0 +1,198 @@
+{
+  "species": "t2_mock",
+  "catalog": "data/semisyn/catalogs/t2_mock_catalog.tsv",
+  "n_samples": 8,
+  "families": [
+    "ANGELA",
+    "Athila6",
+    "BARE-1",
+    "CRM1",
+    "RIRE2"
+  ],
+  "samples": [
+    {
+      "sample_id": "sample_01",
+      "target_SC": {
+        "ANGELA": 0.0,
+        "Athila6": 0.0,
+        "BARE-1": 0.0,
+        "CRM1": 0.0,
+        "RIRE2": 0.0
+      },
+      "truth_SC": {
+        "ANGELA": 0.0,
+        "Athila6": 0.0,
+        "BARE-1": 0.0,
+        "CRM1": 0.0,
+        "RIRE2": 0.0
+      },
+      "n_solo": {
+        "ANGELA": 0,
+        "Athila6": 0,
+        "BARE-1": 0,
+        "CRM1": 0,
+        "RIRE2": 0
+      },
+      "n_intact": {
+        "ANGELA": 2,
+        "Athila6": 2,
+        "BARE-1": 2,
+        "CRM1": 2,
+        "RIRE2": 2
+      },
+      "loci": [
+        "t2_ANGELA_i0004",
+        "t2_ANGELA_i0006",
+        "t2_Athila6_i0005",
+        "t2_Athila6_i0001",
+        "t2_BARE-1_i0003",
+        "t2_BARE-1_i0004",
+        "t2_CRM1_i0002",
+        "t2_CRM1_i0004",
+        "t2_RIRE2_i0002",
+        "t2_RIRE2_i0003"
+      ]
+    },
+    {
+      "sample_id": "sample_02",
+      "target_SC": {
+        "ANGELA": 0.5,
+        "Athila6": 0.5,
+        "BARE-1": 0.5,
+        "CRM1": 0.5,
+        "RIRE2": 0.5
+      },
+      "truth_SC": {
+        "ANGELA": 0.5,
+        "Athila6": 0.5,
+        "BARE-1": 0.5,
+        "CRM1": 0.5,
+        "RIRE2": 0.5
+      },
+      "n_solo": {
+        "ANGELA": 1,
+        "Athila6": 1,
+        "BARE-1": 1,
+        "CRM1": 1,
+        "RIRE2": 1
+      },
+      "n_intact": {
+        "ANGELA": 2,
+        "Athila6": 2,
+        "BARE-1": 2,
+        "CRM1": 2,
+        "RIRE2": 2
+      },
+      "loci": [
+        "t2_ANGELA_i0003",
+        "t2_ANGELA_i0002",
+        "t2_ANGELA_s0019",
+        "t2_Athila6_i0006",
+        "t2_Athila6_i0002",
+        "t2_Athila6_s0031",
+        "t2_BARE-1_i0006",
+        "t2_BARE-1_i0005",
+        "t2_BARE-1_s0015",
+        "t2_CRM1_i0005",
+        "t2_CRM1_i0006",
+        "t2_CRM1_s0010",
+        "t2_RIRE2_i0004",
+        "t2_RIRE2_i0005",
+        "t2_RIRE2_s0037"
+      ]
+    },
+    {
+      "sample_id": "sample_03",
+      "target_SC": {
+        "ANGELA": 1.0,
+        "Athila6": 1.0,
+        "BARE-1": 1.0,
+        "CRM1": 1.0,
+        "RIRE2": 1.0
+      },
+      "truth_SC": {
+        "ANGELA": 1.0,
+        "Athila6": 1.0,
+        "BARE-1": 1.0,
+        "CRM1": 1.0,
+        "RIRE2": 1.0
+      },
+      "n_solo": {
+        "ANGELA": 2,
+        "Athila6": 2,
+        "BARE-1": 2,
+        "CRM1": 2,
+        "RIRE2": 2
+      },
+      "n_intact": {
+        "ANGELA": 2,
+        "Athila6": 2,
+        "BARE-1": 2,
+        "CRM1": 2,
+        "RIRE2": 2
+      },
+      "loci": [
+        "t2_ANGELA_i0005",
+        "t2_ANGELA_i0001",
+        "t2_ANGELA_s0021",
+        "t2_ANGELA_s0013",
+        "t2_Athila6_i0004",
+        "t2_Athila6_i0003",
+        "t2_Athila6_s0006",
+        "t2_Athila6_s0001",
+        "t2_BARE-1_i0002",
+        "t2_BARE-1_i0001",
+        "t2_BARE-1_s0016",
+        "t2_BARE-1_s0014",
+        "t2_CRM1_i0003",
+        "t2_CRM1_i0001",
+        "t2_CRM1_s0004",
+        "t2_CRM1_s0011",
+        "t2_RIRE2_i0006",
+        "t2_RIRE2_i0001",
+        "t2_RIRE2_s0013",
+        "t2_RIRE2_s0031"
+      ]
+    },
+    {
+      "sample_id": "sample_04",
+      "target_SC": {},
+      "truth_SC": {},
+      "n_solo": {},
+      "n_intact": {},
+      "loci": []
+    },
+    {
+      "sample_id": "sample_05",
+      "target_SC": {},
+      "truth_SC": {},
+      "n_solo": {},
+      "n_intact": {},
+      "loci": []
+    },
+    {
+      "sample_id": "sample_06",
+      "target_SC": {},
+      "truth_SC": {},
+      "n_solo": {},
+      "n_intact": {},
+      "loci": []
+    },
+    {
+      "sample_id": "sample_07",
+      "target_SC": {},
+      "truth_SC": {},
+      "n_solo": {},
+      "n_intact": {},
+      "loci": []
+    },
+    {
+      "sample_id": "sample_08",
+      "target_SC": {},
+      "truth_SC": {},
+      "n_solo": {},
+      "n_intact": {},
+      "loci": []
+    }
+  ]
+}
