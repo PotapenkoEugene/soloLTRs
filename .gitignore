@@ -1,11 +1,30 @@
 references/
 
+# Local tool builds (Look4LTRs, soloLTRseeker clones)
+tools/
+
 # Pipeline generated output (collapsed consensus, bwa-mem2 index, result TSVs)
 data/pipeline/
+
+# Semi-synthetic benchmark: large/generated files
+data/semisyn/genomes/
+data/semisyn/annotations/
+data/semisyn/extracted/
+data/semisyn/samples/**/genome.fa
+data/semisyn/samples/**/reads_*/
+data/semisyn/results/
+
+# BWA-mem2 index files (always generated, never commit)
+*.0123
+*.bwt.2bit.64
+*.pac
+*.amb
+*.ann
 
 # Simulated genomes and reads (large files — do not commit)
 data/sim/*/genome/*.fa
 data/sim/*/genome/*.fasta
+data/sim/*/genome/*.fai
 data/sim/*/reads*/
 data/sim/t4/samples/
 *.fq
