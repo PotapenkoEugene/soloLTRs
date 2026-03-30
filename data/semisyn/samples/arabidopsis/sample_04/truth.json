@@ -1,0 +1,22 @@
+{
+  "sample_id": "sample_04",
+  "species": "arabidopsis",
+  "truth_SC": {
+    "Copia": 2.0,
+    "Gypsy": 2.0
+  },
+  "n_solo": {
+    "Copia": 4,
+    "Gypsy": 4
+  },
+  "n_intact": {
+    "Copia": 2,
+    "Gypsy": 2
+  },
+  "target_SC": {
+    "Copia": 2.0,
+    "Gypsy": 2.0
+  },
+  "n_loci": 12,
+  "genome_len": 166272
+}
