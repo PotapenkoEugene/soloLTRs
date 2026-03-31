@@ -1,24 +1,57 @@
 PYTHON   := python3
+THREADS  := 8
 
 # ──────────────────────────────────────────────────────────────────────────────
 # soloLTRs: Cossu M/U pipeline
 #
 # Goal: reproduce and then accelerate Cossu et al. 2017 (GBE, DOI: 10.1093/gbe/evx260)
-#   Phase 1 — Reproduce: RepeatMasker-based M/U pipeline
-#   Phase 2 — Accelerate: replace RepeatMasker with fast aligner
+#   Phase 1 — Reproduce: BLAST-based tag search + BWA ALN tract mapping
+#   Phase 2 — Accelerate: replace BLAST with even faster alternative if needed
 # ──────────────────────────────────────────────────────────────────────────────
 
 # Paths
-COSSU_REF   := references/cossu
-DATA_COSSU  := data/cossu
+COSSU_REF      := references/cossu
+AT_PARALOGS    := $(COSSU_REF)/Supporting_Data_S1/ANGIOSPERMS/complete_Arabidopsis.fa
+AT_READS_R1    := data/reads/arabidopsis/ERR171441_1.fastq.gz
+AT_READS_R2    := data/reads/arabidopsis/ERR171441_2.fastq.gz
+AT_OUT         := data/cossu/arabidopsis
 
 # ──────────────────────────────────────────────────
-# Cossu M/U pipeline (TODO: implement in Phase 1)
+# Cossu M/U pipeline — Arabidopsis (Phase 1)
 # ──────────────────────────────────────────────────
 
-# mu-prepare: extract START/END tags + 20-nt tracts from paralogs
-# mu-run:     RepeatMasker read search → tract extraction → BWA ALN → M/U count
-# mu-fast:    same pipeline with fast aligner replacing RepeatMasker
+## mu-arabidopsis: run full M/U pipeline on Arabidopsis ERR171441 R1+R2 reads
+mu-arabidopsis: $(AT_READS_R1) $(AT_READS_R2)
+	mkdir -p $(AT_OUT)
+	$(PYTHON) -m scripts.pipeline.cli all \
+	  --paralogs $(AT_PARALOGS) \
+	  --reads    $(AT_READS_R1) $(AT_READS_R2) \
+	  --out-dir  $(AT_OUT) \
+	  --threads  $(THREADS)
+
+## mu-prepare-arabidopsis: extract tags only (no reads needed)
+mu-prepare-arabidopsis:
+	mkdir -p $(AT_OUT)
+	$(PYTHON) -m scripts.pipeline.cli prepare \
+	  --paralogs $(AT_PARALOGS) \
+	  --out-dir  $(AT_OUT)
+
+## mu-run-arabidopsis: run pipeline (assumes prepare already done)
+mu-run-arabidopsis: $(AT_READS_R1) $(AT_READS_R2)
+	$(PYTHON) -m scripts.pipeline.cli run \
+	  --paralogs $(AT_PARALOGS) \
+	  --reads    $(AT_READS_R1) $(AT_READS_R2) \
+	  --out-dir  $(AT_OUT) \
+	  --threads  $(THREADS)
+
+## mu-clean-arabidopsis: remove all intermediate files (keep only results.tsv)
+mu-clean-arabidopsis:
+	rm -f $(AT_OUT)/reads.fa $(AT_OUT)/blast_hits.tsv
+	rm -rf $(AT_OUT)/reads_db
+	rm -f $(AT_OUT)/tracts.fa $(AT_OUT)/tracts.bam $(AT_OUT)/tracts.bam.bai
+	rm -f $(AT_OUT)/hits.tsv
+
+.PHONY: mu-arabidopsis mu-prepare-arabidopsis mu-run-arabidopsis mu-clean-arabidopsis
 
 # ──────────────────────────────────────────────────
 # Arabidopsis genome (TAIR10) — still needed for Phase 1
@@ -61,4 +94,4 @@ semisyn-run-edta:
 	    --anno 1 \
 	    --threads $(SS_THREADS)
 
-.PHONY: genome-arabidopsis semisyn-run-edta
+.PHONY: genome-arabidopsis semisyn-run-edta mu-arabidopsis mu-prepare-arabidopsis mu-run-arabidopsis mu-clean-arabidopsis
