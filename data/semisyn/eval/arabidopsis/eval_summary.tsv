@@ -1,7 +1,0 @@
-strata	species	coverage	family	n	RMSE	MAE	bias	pearson_r	spearman_rho	CI_calibration
-all	arabidopsis	all	all	14	90.3734	90.0714	90.0714	nan	nan	NA
-coverage	arabidopsis	5	all	2	88.0142	87.5000	87.5000	nan	nan	NA
-coverage	arabidopsis	10	all	5	89.6716	89.4000	89.4000	nan	nan	NA
-coverage	arabidopsis	30	all	7	91.5306	91.2857	91.2857	nan	nan	NA
-family	arabidopsis	all	Copia	1	98.0000	98.0000	98.0000	nan	nan	NA
-family	arabidopsis	all	Gypsy	13	89.7599	89.4615	89.4615	nan	nan	NA
