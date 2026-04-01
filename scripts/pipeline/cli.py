@@ -84,10 +84,13 @@ def cmd_run(args):
     if not reads_fasta.exists():
         total_reads = 0
         first = True
-        for reads_in in reads_inputs:
+        for i, reads_in in enumerate(reads_inputs):
             print(f"Converting {reads_in.name} ...", flush=True)
             tmp = out_dir / f"_tmp_{reads_in.stem}.fa"
-            n = fastq_to_fasta(reads_in, tmp)
+            # Prefix read IDs with r1_, r2_, etc. to avoid duplicate IDs between
+            # paired-end files (both R1 and R2 share the same read names).
+            prefix = f"r{i+1}_" if len(reads_inputs) > 1 else ""
+            n = fastq_to_fasta(reads_in, tmp, prefix=prefix)
             total_reads += n
             print(f"  {n:,} reads")
             mode = "w" if first else "a"
@@ -170,13 +173,13 @@ def cmd_run(args):
     print(f"\nResults → {results_tsv}\n")
 
     # Print summary table
-    header = f"{'Family':<30} {'M':>8} {'U':>8} {'M+U':>8} {'M/U':>8} {'S/C':>8}"
+    header = f"{'Family':<30} {'M':>8} {'U':>8} {'M+U':>8} {'U/M':>8} {'S/C':>8}"
     print(header)
     print("-" * len(header))
     for row in rows:
         print(
             f"{row['family']:<30} {row['M']:>8} {row['U']:>8} "
-            f"{row['M_plus_U']:>8} {row['M_over_U']:>8} {row['S_to_C']:>8}"
+            f"{row['M_plus_U']:>8} {row['U_over_M']:>8} {row['S_to_C']:>8}"
         )
 
 

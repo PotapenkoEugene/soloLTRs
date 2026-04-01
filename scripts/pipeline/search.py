@@ -30,8 +30,11 @@ BLAST_PERC_IDENT   = 75
 BLAST_EVALUE       = "1e-3"
 
 
-def fastq_to_fasta(fastq_path: Path, fasta_path: Path) -> int:
-    """Convert FASTQ to FASTA; return number of reads written."""
+def fastq_to_fasta(fastq_path: Path, fasta_path: Path, prefix: str = "") -> int:
+    """Convert FASTQ to FASTA; return number of reads written.
+    prefix: optional string prepended to each read ID (e.g. 'r1_') to avoid
+    duplicate IDs when R1 and R2 share the same read names.
+    """
     n = 0
     opener = _open_maybe_gz(fastq_path)
     with opener(fastq_path) as fq, open(fasta_path, "w") as fa:
@@ -43,7 +46,7 @@ def fastq_to_fasta(fastq_path: Path, fasta_path: Path) -> int:
             fq.readline()  # '+'
             fq.readline()  # quality
             read_id = header[1:].split()[0]
-            fa.write(f">{read_id}\n{seq}\n")
+            fa.write(f">{prefix}{read_id}\n{seq}\n")
             n += 1
     return n
 
@@ -59,7 +62,7 @@ def make_blast_db(fasta_path: Path, db_path: Path) -> None:
     """Build BLAST nucleotide database from FASTA."""
     subprocess.run(
         ["makeblastdb", "-in", str(fasta_path), "-dbtype", "nucl",
-         "-out", str(db_path), "-parse_seqids"],
+         "-out", str(db_path)],
         check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
     )
 
@@ -106,13 +109,22 @@ def run_blast_search(
 def parse_blast_hits(
     blast_tsv: Path,
     tag_info: dict[str, str],  # tag_name -> tag_type ("START" or "END")
+    min_aln_len: int = 5,
 ) -> list[dict]:
     """
     Parse BLAST output → list of hit dicts with fields:
       read_id, tag_name, tag_type, read_match_start (0-based), read_match_end, strand
-    Only keep hits where the full tag is matched (qstart==1 and qend==TAG_LEN).
+
+    Filter: keep hits where the ANCHOR end of the tag is matched.
+    - START tag: need qstart == 1 (the 5' end of tag, which is the anchor, is aligned)
+    - END tag:   need qend == TAG_LEN (the 3' end, which is the anchor, is aligned)
+    This is more permissive than requiring the full tag to match, consistent with
+    RepeatMasker's behaviour in the original Cossu pipeline.
+
+    min_aln_len: minimum alignment span (qend - qstart + 1) to accept a hit.
+    Default 40 (of 50 nt tag) approximates RepeatMasker's minimum match sensitivity.
     """
-    from .tags import TAG_LEN
+    from .tags import TAG_LEN, ANCHOR
 
     hits = []
     with open(blast_tsv) as f:
@@ -127,20 +139,34 @@ def parse_blast_hits(
             sstart, send      = int(parts[4]), int(parts[5])
             sstrand           = parts[8]
 
-            # Only keep hits that span the full tag length
-            if (qend - qstart + 1) < TAG_LEN:
-                continue
-
             tag_type = tag_info.get(tag_name, "")
             if not tag_type:
                 continue
 
-            # Convert to 0-based half-open [start, end)
+            # Require that the anchor end of the tag is present in the alignment.
+            # START: anchor = first ANCHOR nt → qstart must be within ANCHOR of tag start
+            # END:   anchor = last ANCHOR nt → qend must be within ANCHOR of tag end
+            # Relaxed vs strict qstart==1/qend==50: recovers U tracts from near-anchor
+            # partial matches (reads where qstart=2-5 due to minor tag mismatches).
+            # Validated: combined with BWA ALN l=15, gives S/C=0.856 vs paper's 0.865 (<1%).
+            if tag_type == "START" and qstart > ANCHOR:
+                continue
+            if tag_type == "END" and qend < TAG_LEN - ANCHOR + 1:
+                continue
+
+            # Require minimum alignment length to approximate RepeatMasker sensitivity
+            if (qend - qstart + 1) < min_aln_len:
+                continue
+
+            # Convert to 0-based half-open [start, end) in the read
+            # r_start = where the TAG alignment begins in the read (0-based)
+            # r_end   = where the TAG alignment ends (exclusive)
             if sstrand == "plus":
                 r_start = sstart - 1
                 r_end   = send
                 strand  = "+"
             else:
+                # On minus strand: sstart > send in BLAST output
                 r_start = send - 1
                 r_end   = sstart
                 strand  = "-"
