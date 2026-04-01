@@ -14,44 +14,79 @@ COSSU_REF      := references/cossu
 AT_PARALOGS    := $(COSSU_REF)/Supporting_Data_S1/ANGIOSPERMS/complete_Arabidopsis.fa
 AT_READS_R1    := data/reads/arabidopsis/ERR171441_1.fastq.gz
 AT_READS_R2    := data/reads/arabidopsis/ERR171441_2.fastq.gz
+AT_OUT_MM2     := data/cossu/arabidopsis-mm2
+AT_OUT_BLAST   := data/cossu/arabidopsis-blast
+# Legacy path (Phase 1 validated results) — untouched by Phase 2 targets
 AT_OUT         := data/cossu/arabidopsis
 
 # ──────────────────────────────────────────────────
-# Cossu M/U pipeline — Arabidopsis (Phase 1)
+# Cossu M/U pipeline — Arabidopsis (Phase 2)
 # ──────────────────────────────────────────────────
 
-## mu-arabidopsis: run full M/U pipeline on Arabidopsis ERR171441 R1+R2 reads
+## mu-arabidopsis-mm2: run M/U pipeline with minimap2 engine (fast, default)
+mu-arabidopsis-mm2: $(AT_READS_R1) $(AT_READS_R2)
+	mkdir -p $(AT_OUT_MM2)
+	$(PYTHON) -m scripts.pipeline.cli all \
+	  --paralogs $(AT_PARALOGS) \
+	  --reads    $(AT_READS_R1) $(AT_READS_R2) \
+	  --out-dir  $(AT_OUT_MM2) \
+	  --threads  $(THREADS) \
+	  --engine   minimap2
+
+## mu-arabidopsis-blast: run M/U pipeline with BLAST engine (Phase 1 reference)
+mu-arabidopsis-blast: $(AT_READS_R1) $(AT_READS_R2)
+	mkdir -p $(AT_OUT_BLAST)
+	$(PYTHON) -m scripts.pipeline.cli all \
+	  --paralogs $(AT_PARALOGS) \
+	  --reads    $(AT_READS_R1) $(AT_READS_R2) \
+	  --out-dir  $(AT_OUT_BLAST) \
+	  --threads  $(THREADS) \
+	  --engine   blast
+
+## mu-benchmark: run both engines and compare per-family S/C ratios
+mu-benchmark: mu-arabidopsis-blast mu-arabidopsis-mm2
+	@echo ""
+	@echo "=== S/C comparison: BLAST vs minimap2 ==="
+	@echo "--- BLAST ---"
+	@cat $(AT_OUT_BLAST)/results.tsv
+	@echo ""
+	@echo "--- minimap2 ---"
+	@cat $(AT_OUT_MM2)/results.tsv
+	@echo ""
+	@echo "--- timings ---"
+	@echo "BLAST:"
+	@cat $(AT_OUT_BLAST)/timings.tsv
+	@echo "minimap2:"
+	@cat $(AT_OUT_MM2)/timings.tsv
+
+## mu-prepare-arabidopsis: extract tags only (no reads needed)
+mu-prepare-arabidopsis:
+	mkdir -p $(AT_OUT_MM2)
+	$(PYTHON) -m scripts.pipeline.cli prepare \
+	  --paralogs $(AT_PARALOGS) \
+	  --out-dir  $(AT_OUT_MM2)
+
+## mu-arabidopsis: legacy alias — run full M/U pipeline (Phase 1 BLAST, original output dir)
 mu-arabidopsis: $(AT_READS_R1) $(AT_READS_R2)
 	mkdir -p $(AT_OUT)
 	$(PYTHON) -m scripts.pipeline.cli all \
 	  --paralogs $(AT_PARALOGS) \
 	  --reads    $(AT_READS_R1) $(AT_READS_R2) \
 	  --out-dir  $(AT_OUT) \
-	  --threads  $(THREADS)
+	  --threads  $(THREADS) \
+	  --engine   blast
 
-## mu-prepare-arabidopsis: extract tags only (no reads needed)
-mu-prepare-arabidopsis:
-	mkdir -p $(AT_OUT)
-	$(PYTHON) -m scripts.pipeline.cli prepare \
-	  --paralogs $(AT_PARALOGS) \
-	  --out-dir  $(AT_OUT)
-
-## mu-run-arabidopsis: run pipeline (assumes prepare already done)
-mu-run-arabidopsis: $(AT_READS_R1) $(AT_READS_R2)
-	$(PYTHON) -m scripts.pipeline.cli run \
-	  --paralogs $(AT_PARALOGS) \
-	  --reads    $(AT_READS_R1) $(AT_READS_R2) \
-	  --out-dir  $(AT_OUT) \
-	  --threads  $(THREADS)
-
-## mu-clean-arabidopsis: remove all intermediate files (keep only results.tsv)
+## mu-clean-arabidopsis: remove all intermediate files for both engine output dirs
 mu-clean-arabidopsis:
-	rm -f $(AT_OUT)/reads.fa $(AT_OUT)/blast_hits.tsv
-	rm -rf $(AT_OUT)/reads_db
-	rm -f $(AT_OUT)/tracts.fa $(AT_OUT)/tracts.bam $(AT_OUT)/tracts.bam.bai
-	rm -f $(AT_OUT)/hits.tsv
+	rm -f $(AT_OUT_MM2)/tag_hits.sam $(AT_OUT_MM2)/hits.tsv
+	rm -f $(AT_OUT_MM2)/tracts.fa $(AT_OUT_MM2)/tracts.bam $(AT_OUT_MM2)/tracts.bam.bai
+	rm -f $(AT_OUT_BLAST)/reads.fa $(AT_OUT_BLAST)/blast_hits.tsv
+	rm -rf $(AT_OUT_BLAST)/reads_db
+	rm -f $(AT_OUT_BLAST)/hits.tsv
+	rm -f $(AT_OUT_BLAST)/tracts.fa $(AT_OUT_BLAST)/tracts.bam $(AT_OUT_BLAST)/tracts.bam.bai
 
-.PHONY: mu-arabidopsis mu-prepare-arabidopsis mu-run-arabidopsis mu-clean-arabidopsis
+.PHONY: mu-arabidopsis mu-arabidopsis-mm2 mu-arabidopsis-blast mu-benchmark \
+        mu-prepare-arabidopsis mu-clean-arabidopsis
 
 # ──────────────────────────────────────────────────
 # Arabidopsis genome (TAIR10) — still needed for Phase 1
@@ -94,4 +129,4 @@ semisyn-run-edta:
 	    --anno 1 \
 	    --threads $(SS_THREADS)
 
-.PHONY: genome-arabidopsis semisyn-run-edta mu-arabidopsis mu-prepare-arabidopsis mu-run-arabidopsis mu-clean-arabidopsis
+.PHONY: genome-arabidopsis semisyn-run-edta
