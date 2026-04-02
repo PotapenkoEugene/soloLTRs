@@ -1,4 +1,11 @@
-references/
+# References: exclude large/generated files, keep small paralog FASTAs and metadata
+references/**/*.pdf
+references/cossu/*.zip
+references/cossu/*.msf
+references/cossu/Supporting_Data_S1/PICEA_ABIES/
+references/cossu/Supporting_Data_S1/PICEA_GLAUCA/
+references/cossu/Supporting_Data_S1/PINUS_TAEDA/
+references/cossu/Supporting_Data_S1/PINUS_LAMBERTIANA/
 
 # Local tool builds
 tools/
@@ -16,9 +23,11 @@ data/cossu/
 # Archived old code (zip kept locally, not committed)
 old.zip
 
-# BWA-mem2 index files (always generated, never commit)
+# BWA / BWA-mem2 index files (always generated, never commit)
 *.0123
 *.bwt.2bit.64
+*.bwt
+*.sa
 *.pac
 *.amb
 *.ann
